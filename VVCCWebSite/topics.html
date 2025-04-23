@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>VVCC - Breakout Listing</title>
+    <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon" />
+    <link rel="stylesheet" href="css/template.css" />
+    <link rel="stylesheet" href="css/topics.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Valley View Conference Center</h1>
+      <nav>
+        <ul id="nav"></ul>
+      </nav>
+    </header>
+    <div class="container">
+      <section class="flex">
+        <article class="split lefter halfer">
+          <h3>Breakout Topic Listings</h3>
+          <p>Create a list of Breakout Classes for your meeting</p>
+          <form id="myForm">
+            <p>
+              <label for="topic">Topic: </label><br />
+              <input
+                type="text"
+                name="topic"
+                id="topic"
+                required
+                placeholder="Topic of breakout class ..."
+              />
+              <span class="err"></span>
+            </p>
+            <p>
+              <label for="speaker">Speaker: </label><br />
+              <input
+                type="text"
+                name="speaker"
+                id="speaker"
+                required
+                placeholder="Who will lead this class?"
+              />
+              <span class="err"></span>
+            </p>
+            <p>
+              <label for="time">Meeting Time (hour, minute, AM/PM): </label
+              ><br />
+              <input type="time" name="time" id="time" required />
+              <span class="err"></span>
+            </p>
+            <p>
+              <label for="room">Room: </label>
+              <select name="room" id="room">
+                <option>-select-</option>
+                <option value="Oak">Oak</option>
+                <option value="Walnut">Walnut</option>
+                <option value="Sycamore">Sycamore</option>
+                <option value="Cedar">Cedar</option>
+                <option value="Hickory">Hickory</option>
+              </select>
+              <label for="duration"> &nbsp;Duration: </label>
+              <select id="duration" name="duration">
+                <option>-select-</option>
+                <option value="0.5">0.5</option>
+                <option value="1.0">1.0</option>
+                <option value="1.5">1.5</option>
+                <option value="2.0">2.0</option>
+              </select>
+              hour(s)
+            </p>
+            <p>
+              <button type="submit" id="frmButton" class="formBtn">
+                Add Listing
+              </button>
+            </p>
+          </form>
+        </article>
+        <article class="split righty halfer">
+          <h3>Listings</h3>
+          <p>Your list of breakout meetings:</p>
+          <div id="results"></div>
+        </article>
+      </section>
+    </div>
+    <footer class="footer">
+      <p class="copy" id="copy">
+        Copyright &copy; 2020 <a href="#">Mikima Trails Enterprises, LLC</a> All
+        Rights Reserved
+      </p>
+    </footer>
+    <script src="js/pages.js"></script>
+    <script>
+      // Class to store form data
+      class BreakoutSession {
+        constructor(topic, speaker, time, room, duration) {
+          this.topic = topic;
+          this.speaker = speaker;
+          this.time = time;
+          this.room = room;
+          this.duration = duration;
+        }
+
+        // Method to return formatted HTML string
+        formatSession() {
+          return `
+              <p><strong>${this.topic}</strong></p>
+              <p>Speaker: ${this.speaker}</p>
+              <p>Time: ${this.time}</p>
+              <p>Room: ${this.room}</p>
+              <p>Duration: ${this.duration}</p>
+              <hr>
+          `;
+        }
+      }
+
+      // Function to pass your time value through so that it comes out as a 12-hour format instead of a 24-hour format. Create a variable and assign this function and pass the tod.value. Use that as your value for object instantiation argument */
+      function processTime(time) {
+        console.log('what time is it? :' + time);
+        var hours = time.split(':');
+        var hour;
+        if (hours[0] > 12) {
+          hour = hours[0] - 12;
+          time = hour + ':' + hours[1] + ' PM';
+        } else if (hours[0] < 12) {
+          time = hours[0] + ':' + hours[1] + ' AM';
+        } else {
+          time = hours[0] + ':' + hours[1] + ' PM';
+        }
+        console.log('The time is: ' + time);
+        return time;
+      }
+
+      // Event listener for form submission
+      document.getElementById('myForm').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Collect form data
+        const topic = document.getElementById('topic').value;
+        const speaker = document.getElementById('speaker').value;
+        const time = processTime(document.getElementById('time').value); 
+        const room = document.getElementById('room').value;
+        const duration = document.getElementById('duration').value;
+
+        // Create a new BreakoutSession object
+        const session = new BreakoutSession(topic, speaker, time, room, duration);
+
+        // Display the session data in the results section
+        const results = document.getElementById('results');
+        results.innerHTML += session.formatSession(); // Append new session data
+
+        // Clear the form
+        document.getElementById('myForm').reset();
+        document.getElementById('topic').focus(); // Set focus back to the topic input
+      });
+    </script>
+  </body>
+</html>
